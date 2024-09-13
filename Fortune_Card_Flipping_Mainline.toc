@@ -1,0 +1,12 @@
+## Interface: 110002
+## Title: Card Flipping
+## Author: TheGenomeWhisperer
+## Version: 1.2.0
+## Notes: Tracks Omens and Mysterious Fortune Card Flip data and calculates it all.
+## SavedVariables: FCF_Save
+
+Fortune_Card_Flipping.lua
+Fortune_Card_Vendor.lua
+Fortune_Card_Settings.lua
+Fortune_Card_Reporting.lua
+Fortune_Card_Milling.lua
