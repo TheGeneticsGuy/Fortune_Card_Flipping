@@ -54,7 +54,7 @@ Report.ReportFated = function( cards )
 
     print("\n");
     print("FATED FORTUNE CARD RESULTS - " .. tagLine);
-    print("Recipe:    " .. cards[10] .. " (Value not Included)");
+    print("0.125g:  " .. cards[10] .. " (Recipe)");
     print("1g:            " .. cards[9]);
     print("7g:            " .. cards[8]);
     print("10g:          " .. cards[7]);
@@ -99,7 +99,7 @@ end
 
 -- Adds up historal value of Blood Cards
 Report.TotalFatedValueHistorical = function()
-    local result = (FCF_Save.Fated[1]*25000)+(FCF_Save.Fated[2]*2500)+(FCF_Save.Fated[3]*500)+(FCF_Save.Fated[4]*100)+(FCF_Save.Fated[5]*50)+(FCF_Save.Fated[6]*25)+(FCF_Save.Fated[7]*10)+(FCF_Save.Fated[8]*7)+(FCF_Save.Fated[9]*1);
+    local result = (FCF_Save.Fated[1]*25000)+(FCF_Save.Fated[2]*2500)+(FCF_Save.Fated[3]*500)+(FCF_Save.Fated[4]*100)+(FCF_Save.Fated[5]*50)+(FCF_Save.Fated[6]*25)+(FCF_Save.Fated[7]*10)+(FCF_Save.Fated[8]*7)+(FCF_Save.Fated[9]*1)+(FCF_Save.Fated[10]*1);
     return result;
 end
 
@@ -116,6 +116,6 @@ Report.TotalOmensValue = function()
 end
 
 Report.TotalFatedValue = function()
-    local result = (FCF_G.fatedTotal[1]*25000)+(FCF_G.fatedTotal[2]*2500)+(FCF_G.fatedTotal[3]*500)+(FCF_G.fatedTotal[4]*100)+(FCF_G.fatedTotal[5]*50)+(FCF_G.fatedTotal[6]*25)+(FCF_G.fatedTotal[7]*10)+(FCF_G.fatedTotal[8]*7)+(FCF_G.fatedTotal[9]*1);
+    local result = (FCF_G.fatedTotal[1]*25000)+(FCF_G.fatedTotal[2]*2500)+(FCF_G.fatedTotal[3]*500)+(FCF_G.fatedTotal[4]*100)+(FCF_G.fatedTotal[5]*50)+(FCF_G.fatedTotal[6]*25)+(FCF_G.fatedTotal[7]*10)+(FCF_G.fatedTotal[8]*7)+(FCF_G.fatedTotal[9]*1)+(FCF_G.fatedTotal[10]*0.125);
     return result;
 end

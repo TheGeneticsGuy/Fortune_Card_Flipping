@@ -1,7 +1,7 @@
 ## Interface: 40400
-## Title: Card Flipping
+## Title: Fortune Card Flipping
 ## Author: TheGenomeWhisperer
-## Version: 1.2.0
+## Version: 1.0.0
 ## Notes: Tracks, Fated Fortune, Omens, Mysterious Fortune Card Flip data and calculates it all.
 ## SavedVariables: FCF_Save
 
@@ -9,4 +9,3 @@ Fortune_Card_Flipping.lua
 Fortune_Card_Vendor.lua
 Fortune_Card_Settings.lua
 Fortune_Card_Reporting.lua
-Fortune_Card_Milling.lua

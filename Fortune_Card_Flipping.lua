@@ -91,7 +91,7 @@ FCF.CountMFC = function( value )
         for i = 1 , #FCF_G.mfcTotal do
             FCF_G.mfcTotal[i] = 0;
         end
-        FCF_G.sessionTotal.fmc = 0;
+        FCF_G.sessionTotal.mfc = 0;
 
     end
 end

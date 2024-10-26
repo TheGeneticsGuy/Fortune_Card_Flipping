@@ -1,5 +1,6 @@
 local Vendor = {};
 FCF.Vendor = Vendor;
+local currently_counting = false
 
 -- Right now, any card 1000g+
 local excludedIDs = { [60844] = true , [60840] = true , [113354] = true ,[113353] = true , [113352] = true , [199170] = true , [199132] = true , [194829] = true  } -- , [198127] = true (coookie recipe)
@@ -7,44 +8,50 @@ local excludedIDs = { [60844] = true , [60840] = true , [113354] = true ,[113353
 -- Method:          Vendor.AutoSellCards( int , int , int , float , float , float)
 -- What it Does:    Auto sells the chance fortune cards from any expansion to vendor
 -- Purpose:         Easier than having to sell individually.
-Vendor.AutoSellCards = function( count , previousMoney )
-    count = count or 0;
-    previousMoney = previousMoney or GetMoney();
+Vendor.AutoSellCards = function( count , previousMoney , isLoop )
 
-    local id = 0;
-    local limit = 10;   -- Vendor has internal limit of 10 max a loop
-    local limitCount = 0;
-    local delay = 1;
+    if not currently_counting or isLoop then
+        currently_counting = true
 
-    for i = 0 , NUM_BAG_SLOTS do
-        for j = 1 , C_Container.GetContainerNumSlots(i) do
-            id = C_Container.GetContainerItemID( i, j );
+        count = count or 0;
+        previousMoney = previousMoney or GetMoney();
 
-            if id then
+        local id = 0;
+        local limit = 10;   -- Vendor has internal limit of 10 max a loop
+        local limitCount = 0;
+        local delay = 1;
 
-                if not excludedIDs[id] and ( FCF_G.fatedCards[id] or FCF_G.omensCards[id] or FCF_G.mfCards[id] ) then
-                    limitCount = limitCount + 1;
-                    count = count + 1;
-                    C_Container.UseContainerItem(i, j)
+        for i = 0 , NUM_BAG_SLOTS do
+            for j = 1 , C_Container.GetContainerNumSlots(i) do
+                id = C_Container.GetContainerItemID( i, j );
 
-                    if limitCount == 10 then
-                        C_Timer.After ( delay , function()
-                            Vendor.AutoSellCards( count , previousMoney )
-                        end);
-                        return;
+                if id then
+
+                    if not excludedIDs[id] and ( FCF_G.fatedCards[id] or FCF_G.omensCards[id] or FCF_G.mfCards[id] ) then
+                        limitCount = limitCount + 1;
+                        count = count + 1;
+                        C_Container.UseContainerItem(i, j)
+
+                        if limitCount == 10 then
+                            C_Timer.After ( delay , function()
+                                Vendor.AutoSellCards( count , previousMoney , true )
+                            end);
+                            return;
+                        end
+
                     end
-
                 end
             end
         end
-    end
-    if count then
-        C_Timer.After ( 1 , function()
-            local difference = Vendor.GetGoldDifference ( previousMoney );
-            if difference ~= "" then
-                print(string.format( "Total Card Value Sold: (%s)" , Vendor.GetGoldDifference ( previousMoney ) ) );
-            end
-        end);
+        if count then
+            C_Timer.After ( 1 , function()
+                local difference = Vendor.GetGoldDifference ( previousMoney );
+                if difference ~= "" then
+                    print(string.format( "Total Card Value Sold: (%s)" , Vendor.GetGoldDifference ( previousMoney ) ) );
+                end
+            end);
+        end
+        currently_counting = false
     end
 end
 
@@ -53,7 +60,7 @@ end
 -- Purpose:         Properly Sell cards
 Vendor.MerchantSell = function ( _ , event)
 
-	if event == "MERCHANT_SHOW" then
+	if event == "MERCHANT_SHOW" and FCF.S().autoSellFullBags then
 		Vendor.AutoSellCards();
 	end
 end
@@ -69,7 +76,7 @@ Vendor.AutoSellIfBagsFull = function()
             count = count + C_Container.GetContainerNumFreeSlots(i);
         end
 
-        if count < 2 and FCF.S().autoSellFullBags then -- Trigger to sell at 1 as when it's zero the next one will go to mailbox
+        if count < 3 and FCF.S().autoSellFullBags then -- Trigger to sell at 1 as when it's zero the next one will go to mailbox
             Vendor.AutoSellCards();
         end
     end
