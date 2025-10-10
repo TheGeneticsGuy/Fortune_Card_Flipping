@@ -7,20 +7,10 @@ FCF.Report = Report;
 -- What it Does:    Builds the card report for MFCs
 -- Purpose:         Clean reporting
 Report.ReportMFC = function( cards )
-    local tagLine = "";
-    local totalValue = 0;
-
-    if not cards then
-        tagLine = "HISTORICAL"
-        cards = FCF_Save.MFC;
-        totalValue = Report.TotalMFCValueHistorical();
-    else
-        tagLine = "CURRENT SESSION";
-        totalValue = Report.TotalMFCValue();
-    end
+    local totalValue = Report.TotalMFCValue( cards);
 
     print("\n");
-    print("MYSTERIOUS FORTUNE CARD RESULTS - " .. tagLine);
+    print("MYSTERIOUS FORTUNE CARD RESULTS - CURRENT SESSION" );
     print(".1g:         " .. cards[9]);
     print(".5g:         " .. cards[8]);
     print("1g:          " .. cards[7]);
@@ -31,29 +21,44 @@ Report.ReportMFC = function( cards )
     print("1000g:    " .. cards[2]);
     print("5000g:    " .. cards[1]);
     print("TOTAL:   " .. Report.GetTotalCards(cards) .. " Cards" );
-    print("TOTAL VALUE: " .. totalValue .. "g")
+    print("TOTAL VALUE: " ..  string.format ( "%.2fg" , totalValue ))
     print("\n")
 
 end
 
--- Method:          Report.ReportFated ( table )
--- What it Does:    Builds the card report for MFCs
+-- Method:          Report.ReportOmens ( table )
+-- What it Does:    Builds the card report for Omens Cards
 -- Purpose:         Clean reporting
-Report.ReportFated = function( cards )
-    local tagLine = "";
-    local totalValue = 0;
-
-    if not cards then
-        tagLine = "HISTORICAL"
-        cards = FCF_Save.Fated;
-        totalValue = Report.TotalFatedValueHistorical();
-    else
-        tagLine = "CURRENT SESSION";
-        totalValue = Report.TotalFatedValue();
-    end
+Report.ReportOmens = function( cards )
+    local totalValue = Report.TotalOmensValue( cards);
 
     print("\n");
-    print("FATED FORTUNE CARD RESULTS - " .. tagLine);
+    print("MYSTERIOUS FORTUNE CARD RESULTS - CURRENT SESSION" );
+    print("0.0001g: " .. cards[12]);
+    print("0.1g:      " .. cards[11]);
+    print("0.5g:      " .. cards[10]);
+    print("1g:          " .. cards[9]);
+    print("5g:          " .. cards[8]);
+    print("10g:        " .. cards[7])
+    print("20g:        " .. cards[6]);
+    print("50g:        " .. cards[5]);
+    print("100g:      " .. cards[4]);
+    print("1000g:    " .. cards[3]);
+    print("3000g:    " .. cards[2]);
+    print("6000g:    " .. cards[1]);
+    print("TOTAL:   " .. Report.GetTotalCards(cards) .. " Cards" );
+    print("TOTAL VALUE: " ..  string.format ( "%.2fg" , totalValue ))
+    print("\n")
+end
+
+-- Method:          Report.ReportFated ( table )
+-- What it Does:    Builds the card report for Fated Cards
+-- Purpose:         Clean reporting
+Report.ReportFated = function( cards )
+    local totalValue = Report.TotalFatedValue( cards);
+
+    print("\n");
+    print("FATED FORTUNE CARD RESULTS - CURRENT SESSION" );
     print("0.125g:  " .. cards[10] .. " (Recipe)");
     print("1g:            " .. cards[9]);
     print("7g:            " .. cards[8]);
@@ -65,9 +70,8 @@ Report.ReportFated = function( cards )
     print("2500g:      " .. cards[2]);
     print("25000g:    " .. cards[1]);
     print("TOTAL:    " .. Report.GetTotalCards(cards) .. " Cards" );
-    print( string.format ("TOTAL VALUE: %.2fg" , totalValue ) )
+    print("TOTAL VALUE: " ..  string.format ( "%.2fg" , totalValue ) )
     print("\n")
-
 end
 
 -- Method:          Report.GetTotalCards ( array )
@@ -81,41 +85,19 @@ Report.GetTotalCards = function ( cards )
     return count;
 end
 
-Report.ReportOmens = function( cards )
-    cards = cards or FCF_Save.Omen;
-end
-
--- Adds up all HISTORICAL MFC gold value.
-Report.TotalMFCValueHistorical = function()
-    local result = (FCF_Save.MFC[9]*0.1)+(FCF_Save.MFC[8]*0.5)+(FCF_Save.MFC[7]*1)+(FCF_Save.MFC[6]*2)+(FCF_Save.MFC[5]*5)+(FCF_Save.MFC[4]*20)+(FCF_Save.MFC[3]*50)+(FCF_Save.MFC[2]*1000)+(FCF_Save.MFC[1]*5000);
-    return result;
-end
-
--- Adds up historal value of Blood Cards
-Report.TotalOmensValueHistorical = function()
-    local result = (FCF_Save.Omen[12]*0.001)+(FCF_Save.Omen[11]*0.1)+(FCF_Save.Omen[10]*0.5)+(FCF_Save.Omen[9]*1)+(FCF_Save.Omen[8]*5)+(FCF_Save.Omen[7]*10)+(FCF_Save.Omen[6]*20)+(FCF_Save.Omen[5]*50)+(FCF_Save.Omen[4]*100)+(FCF_Save.Omen[3]*1000)+(FCF_Save.Omen[2]*3000)+(FCF_Save.Omen[1]*6000);
-    return result;
-end
-
--- Adds up historal value of Blood Cards
-Report.TotalFatedValueHistorical = function()
-    local result = (FCF_Save.Fated[1]*25000)+(FCF_Save.Fated[2]*2500)+(FCF_Save.Fated[3]*500)+(FCF_Save.Fated[4]*100)+(FCF_Save.Fated[5]*50)+(FCF_Save.Fated[6]*25)+(FCF_Save.Fated[7]*10)+(FCF_Save.Fated[8]*7)+(FCF_Save.Fated[9]*1)+(FCF_Save.Fated[10]*1);
-    return result;
-end
-
 --Adds up gold value of this session
-Report.TotalMFCValue = function()
-    local result = (FCF_G.mfcTotal[9]*0.1)+(FCF_G.mfcTotal[8]*0.5)+(FCF_G.mfcTotal[7]*1)+(FCF_G.mfcTotal[6]*2)+(FCF_G.mfcTotal[5]*5)+(FCF_G.mfcTotal[4]*20)+(FCF_G.mfcTotal[3]*50)+(FCF_G.mfcTotal[2]*1000)+(FCF_G.mfcTotal[1]*5000);
+Report.TotalMFCValue = function( cards )
+    local result = (cards[9]*0.1)+(cards[8]*0.5)+(cards[7]*1)+(cards[6]*2)+(cards[5]*5)+(cards[4]*20)+(cards[3]*50)+(cards[2]*1000)+(cards[1]*5000);
     return result
 end
 
 -- Adds up gold value of all Blood Cards
-Report.TotalOmensValue = function()
-    local result = (FCF_G.omensTotal[12]*0.001)+(FCF_G.omensTotal[11]*0.1)+(FCF_G.omensTotal[10]*0.5)+(FCF_G.omensTotal[9]*1)+(FCF_G.omensTotal[8]*5)+(FCF_G.omensTotal[7]*10)+(FCF_G.omensTotal[6]*20)+(FCF_G.omensTotal[5]*50)+(FCF_G.omensTotal[4]*100)+(FCF_G.omensTotal[3]*1000)+(FCF_G.omensTotal[2]*3000)+(FCF_G.omensTotal[1]*6000);
+Report.TotalOmensValue = function( cards )
+    local result = (cards[12]*0.001)+(cards[11]*0.1)+(cards[10]*0.5)+(cards[9]*1)+(cards[8]*5)+(cards[7]*10)+(cards[6]*20)+(cards[5]*50)+(cards[4]*100)+(cards[3]*1000)+(cards[2]*3000)+(cards[1]*6000);
     return result;
 end
 
-Report.TotalFatedValue = function()
-    local result = (FCF_G.fatedTotal[1]*25000)+(FCF_G.fatedTotal[2]*2500)+(FCF_G.fatedTotal[3]*500)+(FCF_G.fatedTotal[4]*100)+(FCF_G.fatedTotal[5]*50)+(FCF_G.fatedTotal[6]*25)+(FCF_G.fatedTotal[7]*10)+(FCF_G.fatedTotal[8]*7)+(FCF_G.fatedTotal[9]*1)+(FCF_G.fatedTotal[10]*0.125);
+Report.TotalFatedValue = function( cards )
+    local result = (cards[1]*25000)+(cards[2]*2500)+(cards[3]*500)+(cards[4]*100)+(cards[5]*50)+(cards[6]*25)+(cards[7]*10)+(cards[8]*7)+(cards[9]*1)+(cards[10]*0.125);
     return result;
 end

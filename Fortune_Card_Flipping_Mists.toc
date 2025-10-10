@@ -1,4 +1,4 @@
-## Interface: 40400
+## Interface: 50500
 ## Title: Fortune Card Flipping
 ## Author: TheGenomeWhisperer
 ## Version: 1.0.0
@@ -9,3 +9,5 @@ Fortune_Card_Flipping.lua
 Fortune_Card_Vendor.lua
 Fortune_Card_Settings.lua
 Fortune_Card_Reporting.lua
+Fortune_Card_UI.lua
+Fortune_Card_Global.lua

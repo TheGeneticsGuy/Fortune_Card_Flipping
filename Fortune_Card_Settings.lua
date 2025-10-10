@@ -12,9 +12,15 @@ MySettings.LoadSettings = function( resetSettings )
         FCF_Save.Setting = {};
     end
 
+    -- Player Controlled Settings
     FCF_Save.Setting = FCF_Save.Setting or {};
+    FCF_Save.Setting.autoShow = FCF_Save.Setting.autoShow or true;
     FCF_Save.Setting.autoSellFullBags = FCF_Save.Setting.autoSellFullBags or true;
-    FCF_Save.Setting.reportAndReset = FCF_Save.Setting.reportAndReset or { true , 1000 };
-    FCF_Save.Setting.stackHerbsDuringMill = FCF_Save.Setting.stackHerbsDuringMill or true;
+    FCF_Save.Setting.reportAndReset = FCF_Save.Setting.reportAndReset or { false , 1000 };
+    -- Off By Default
+
+    -- UI Settings
+    FCF_Save.Setting.CurrentTab = FCF_Save.Setting.CurrentTab or 3;     -- 3 Default = Fated
+    FCF_Save.Setting.Position = FCF_Save.Setting.Position or { "CENTER" , "CENTER" , 0 , 0 };
 
 end

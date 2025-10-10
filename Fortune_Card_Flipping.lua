@@ -18,6 +18,10 @@ FCF_G.sessionTotal = {};
 FCF_G.sessionTotal.mfc = 0;
 FCF_G.sessionTotal.omen = 0;
 FCF_G.sessionTotal.fated = 0;
+
+-- Fontstring Controls
+FCF_G.font = STANDARD_TEXT_FONT;
+
 local addonName = "Fortune_Card_Flipping";
 
 --Mysterious Fortune Card (Cata)
@@ -94,6 +98,8 @@ FCF.CountMFC = function( value )
         FCF_G.sessionTotal.mfc = 0;
 
     end
+
+    FCF.UI.RefreshCount("mfc")
 end
 
 -- Tally the Omens Cards
@@ -103,13 +109,26 @@ FCF.CountOmens = function( value )
     FCF_Save.Omen[valTable[value]] = FCF_Save.Omen[valTable[value]] + 1;
     FCF_G.omensTotal[valTable[value]] = FCF_G.omensTotal[valTable[value]] + 1;
 
+    if FCF_Save.Setting.reportAndReset[1] and FCF_Save.Setting.reportAndReset[2] == FCF_G.sessionTotal.mfc then
+        FCF.Report.ReportOmens( FCF_G.omensTotal );
+
+        -- Reset Table
+        for i = 1 , #FCF_G.omensTotal do
+            FCF_G.omensTotal[i] = 0;
+        end
+        FCF_G.sessionTotal.omen = 0;
+    end
+
     if FCF.S().autoSellFullBags then
         FCF.Vendor.AutoSellIfBagsFull();
     end
+
+    FCF.UI.RefreshCount("omens")
 end
 
 -- Tally the Fated Cards
 FCF.CountFated = function( value )
+
     FCF_G.sessionTotal.fated = FCF_G.sessionTotal.fated + 1;
     local valTable = { [25000]=1, [2500]=2, [500]=3, [100]=4, [50]=5, [25]=6, [10]=7, [7]=8, [1]=9, ["recipe"]=10 };
     FCF_Save.Fated[valTable[value]] = FCF_Save.Fated[valTable[value]] + 1;
@@ -129,6 +148,8 @@ FCF.CountFated = function( value )
         FCF_G.sessionTotal.fated = 0;
 
     end
+
+    FCF.UI.RefreshCount("fated")
 
 end
 
@@ -214,7 +235,6 @@ function FlipReset()
     for i = 1 , #FCF_G.mfcTotal do
         FCF_G.mfcTotal[i] = 0;
     end
-
 end
 
 -- resets historical data
@@ -230,35 +250,55 @@ function FlipResetHistorical()
     for i = 1 , #FCF_Save.Fated do
         FCF_Save.Fated[i] = 0;
     end
+
 end
 
 SlashCmdList["FLIP"] = function(input)
     if input == nil or input:trim() == "" then
-        FCF.Report.ReportMFC( FCF_G.mfcTotal );
-        FCF.Report.ReportFated( FCF_G.fatedTotal );
 
-           -- Print Complete Historical data
-    elseif input == "history" then
-        FCF.Report.ReportMFC();
-        FCF.Report.ReportFated();
+        if FCF.UI.FCF_Count_Frame and FCF.UI.FCF_Count_Frame:IsVisible() then
+            FCF.UI.FCF_Count_Frame:Hide();
+        else
+            if not FCF.UI.FCF_Count_Frame then
+                FCF.UI.BuildMainWindow();
+            else
+                -- if Closed, then on first open
+                FCF.UI.FCF_Count_Frame:Show();
+            end
+            FCF.UI.RefreshCount();
+
+        end
+
+    elseif input == "center" then
+        FCF_Save.Setting.Position = { "CENTER" , "CENTER" , 0 , 0 };
+        if FCF.UI.FCF_Count_Frame then
+            FCF.UI.FCF_Count_Frame:ClearAllPoints();
+            FCF.UI.FCF_Count_Frame:SetPoint( FCF_Save.Setting.Position[1] , UIParent , FCF_Save.Setting.Position[2] , FCF_Save.Setting.Position[3] , FCF_Save.Setting.Position[4] );
+        end
+
+    elseif input == "sheet" or input == "ss" then
+        FCF.UI.GenerateSpreadsheetLink();
 
     --Reset
     elseif input == "reset" then
         print("Card Flip Data Has Been RESET for this session.");
         FlipReset();
+        FCF.UI.RefreshCount();
 
     elseif input == "resetAll" then
         print("All Card Flip Data, including SAVED, has been RESET.");
         FlipReset();
         FlipResetHistorical();
+        FCF.UI.RefreshCount();
 
     -- All commands!
     elseif input == "help" then
         local result = "\n------------------------------------------\n---          CARD FLIPPING          ---\n----          INFORMATION          ----\n------------------------------------------";
             result = result .. "\nTo Check Current Progress:         /flip";
-            result = result .. "\nFor ALL saved counts:                  /flip history";
-            result = result .. "\nReset Current Session to Zero:   /flip reset";
-            result = result .. "\nReset Saved Data to Zero:          /flip resetAll";
+            result = result .. "\nRe-Center Count Window:            /flip center";
+            result = result .. "\nReset Current Session to Zero:    /flip reset";
+            result = result .. "\nReset Saved Data to Zero:           /flip resetAll";
+            result = result .. "\nGet Link to Global Data:             /flip ss";
             print(result);
     -- Input is bad
     else
