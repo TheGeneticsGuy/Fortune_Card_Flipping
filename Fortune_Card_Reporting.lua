@@ -32,23 +32,43 @@ end
 Report.ReportOmens = function( cards )
     local totalValue = Report.TotalOmensValue( cards);
 
-    print("\n");
-    print("MYSTERIOUS FORTUNE CARD RESULTS - CURRENT SESSION" );
-    print("0.0001g: " .. cards[12]);
-    print("0.1g:      " .. cards[11]);
-    print("0.5g:      " .. cards[10]);
-    print("1g:          " .. cards[9]);
-    print("5g:          " .. cards[8]);
-    print("10g:        " .. cards[7])
-    print("20g:        " .. cards[6]);
-    print("50g:        " .. cards[5]);
-    print("100g:      " .. cards[4]);
-    print("1000g:    " .. cards[3]);
-    print("3000g:    " .. cards[2]);
-    print("6000g:    " .. cards[1]);
-    print("TOTAL:   " .. Report.GetTotalCards(cards) .. " Cards" );
-    print("TOTAL VALUE: " ..  string.format ( "%.2fg" , totalValue ))
-    print("\n")
+    if not FCF_G.omensIsReduced then
+        print("\n");
+        print("OMENS CARD RESULTS - CURRENT SESSION" );
+        print("0.0001g: " .. cards[12]);
+        print("0.1g:      " .. cards[11]);
+        print("0.5g:      " .. cards[10]);
+        print("1g:          " .. cards[9]);
+        print("5g:          " .. cards[8]);
+        print("10g:        " .. cards[7])
+        print("20g:        " .. cards[6]);
+        print("50g:        " .. cards[5]);
+        print("100g:      " .. cards[4]);
+        print("1000g:    " .. cards[3]);
+        print("3000g:    " .. cards[2]);
+        print("6000g:    " .. cards[1]);
+        print("TOTAL:   " .. Report.GetTotalCards(cards) .. " Cards" );
+        print("TOTAL VALUE: " ..  string.format ( "%.2fg" , totalValue ))
+        print("\n")
+    else
+        print("\n");
+        print("OMENS CARD RESULTS - CURRENT SESSION" );
+        print("0.0001g: " .. cards[12]);
+        print("0.01g:     " .. cards[11]);
+        print("0.05g:     " .. cards[10]);
+        print("0.1g:       " .. cards[9]);
+        print("0.5g:       " .. cards[8]);
+        print("1g:          " .. cards[7])
+        print("2g:          " .. cards[6]);
+        print("5g:          " .. cards[5]);
+        print("10g:        " .. cards[4]);
+        print("100g:      " .. cards[3]);
+        print("300g:      " .. cards[2]);
+        print("600g:      " .. cards[1]);
+        print("TOTAL:     " .. Report.GetTotalCards(cards) .. " Cards" );
+        print("TOTAL VALUE: " ..  string.format ( "%.2fg" , totalValue ))
+        print("\n")
+    end
 end
 
 -- Method:          Report.ReportFated ( table )
@@ -93,7 +113,12 @@ end
 
 -- Adds up gold value of all Blood Cards
 Report.TotalOmensValue = function( cards )
-    local result = (cards[12]*0.001)+(cards[11]*0.1)+(cards[10]*0.5)+(cards[9]*1)+(cards[8]*5)+(cards[7]*10)+(cards[6]*20)+(cards[5]*50)+(cards[4]*100)+(cards[3]*1000)+(cards[2]*3000)+(cards[1]*6000);
+    local result = 0;
+    if FCF_G.omensIsReduced then
+        result = (cards[12]*0.0001)+(cards[11]*0.01)+(cards[10]*0.05)+(cards[9]*0.1)+(cards[8]*0.5)+(cards[7]*1)+(cards[6]*2)+(cards[5]*5)+(cards[4]*10)+(cards[3]*100)+(cards[2]*300)+(cards[1]*600);
+    else
+        result = (cards[12]*0.0001)+(cards[11]*0.1)+(cards[10]*0.5)+(cards[9]*1)+(cards[8]*5)+(cards[7]*10)+(cards[6]*20)+(cards[5]*50)+(cards[4]*100)+(cards[3]*1000)+(cards[2]*3000)+(cards[1]*6000);
+    end
     return result;
 end
 

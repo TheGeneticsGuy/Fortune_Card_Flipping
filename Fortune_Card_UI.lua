@@ -1,7 +1,7 @@
 local UI = {};
 FCF.UI = UI;
 
-local coreCards = {
+FCF.UI.coreCards = {
     [1] = {
         ["id"] = 60838,
         ["texture"] = 134493,
@@ -296,11 +296,11 @@ UI.BuildMainWindow = function( reprocessText )
         UI.FCF_Count_Frame.TitleText:SetText ( "Fortune Card Flipping" );
         UI.FCF_Count_Frame.CartTypeText:SetFont ( FCF_G.font , 16 );
         UI.FCF_Count_Frame.FCF_FatedTabText:SetFont ( FCF_G.font , 14 );
-        UI.FCF_Count_Frame.FCF_FatedTabText:SetText ( coreCards[3].name );
+        UI.FCF_Count_Frame.FCF_FatedTabText:SetText ( FCF.UI.coreCards[3].name );
         UI.FCF_Count_Frame.FCF_OmensTabText:SetFont ( FCF_G.font , 14 );
-        UI.FCF_Count_Frame.FCF_OmensTabText:SetText ( coreCards[2].name );
+        UI.FCF_Count_Frame.FCF_OmensTabText:SetText ( FCF.UI.coreCards[2].name );
         UI.FCF_Count_Frame.FCF_MFCTabText:SetFont ( FCF_G.font , 14 );
-        UI.FCF_Count_Frame.FCF_MFCTabText:SetText ( coreCards[1].name );
+        UI.FCF_Count_Frame.FCF_MFCTabText:SetText ( FCF.UI.coreCards[1].name );
         UI.FCF_Count_Frame.FCF_AutoShowCheckBox.Text:SetFont ( FCF_G.font , 14 );
         UI.FCF_Count_Frame.FCF_AutoShowCheckBox.Text:SetText ( "Auto-Show on Flip" );
         UI.FCF_Count_Frame.FCF_AutoShowCheckBox:SetHitRectInsets ( 0 , 0 - UI.FCF_Count_Frame.FCF_AutoShowCheckBox.Text:GetWidth() - 2 , 0 , 0 );
@@ -415,10 +415,10 @@ end
 -- What it Does:    Builds the texture and title of the card type header
 -- Purpose:         Compartmentalize this one variable that will change depending on tab
 UI.SetCardValues = function( index )
-    UI.FCF_Count_Frame.CardTypeTexture:SetTexture(coreCards[index].texture);
-    UI.FCF_Count_Frame.CartTypeText:SetText(coreCards[index].name );
+    UI.FCF_Count_Frame.CardTypeTexture:SetTexture(FCF.UI.coreCards[index].texture);
+    UI.FCF_Count_Frame.CartTypeText:SetText(FCF.UI.coreCards[index].name );
 
-    local values = coreCards[index].valTable;
+    local values = FCF.UI.coreCards[index].valTable;
 
     if index == 3 then
         UI.FCF_Count_Frame.FCRecipeTexture:Show();

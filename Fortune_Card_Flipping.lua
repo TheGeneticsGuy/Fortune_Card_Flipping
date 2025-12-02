@@ -19,6 +19,10 @@ FCF_G.sessionTotal.mfc = 0;
 FCF_G.sessionTotal.omen = 0;
 FCF_G.sessionTotal.fated = 0;
 
+-- Session info
+FCF_G.valuesConfigured = false;
+FCF_G.omensIsReduced = false; -- In 11.2 Blizz reduced the value of all Omens vendor to 10% original.
+
 -- Fontstring Controls
 FCF_G.font = STANDARD_TEXT_FONT;
 
@@ -106,10 +110,14 @@ end
 FCF.CountOmens = function( value )
     FCF_G.sessionTotal.omen = FCF_G.sessionTotal.omen + 1;
     local valTable = { [6000]=1, [3000]=2, [1000]=3, [100]=4, [50]=5, [20]=6, [10]=7, [5]=8, [1]=9, [0.5]=10, [0.1]=11, [0.0001]=12 };
+    if FCF_G.omensIsReduced then
+        valTable = { [600]=1, [300]=2, [100]=3, [10]=4, [5]=5, [2]=6, [1]=7, [0.5]=8, [0.1]=9, [0.05]=10, [0.01]=11, [0.0001]=12 };
+    end
     FCF_Save.Omen[valTable[value]] = FCF_Save.Omen[valTable[value]] + 1;
     FCF_G.omensTotal[valTable[value]] = FCF_G.omensTotal[valTable[value]] + 1;
 
-    if FCF_Save.Setting.reportAndReset[1] and FCF_Save.Setting.reportAndReset[2] == FCF_G.sessionTotal.mfc then
+    if FCF_Save.Setting.reportAndReset[1] and FCF_Save.Setting.reportAndReset[2] == FCF_G.sessionTotal.omen then
+
         FCF.Report.ReportOmens( FCF_G.omensTotal );
 
         -- Reset Table
