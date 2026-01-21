@@ -1,4 +1,4 @@
-## Interface: 110207
+## Interface: 120000
 ## Title: Fortune Card Flipping
 ## Author: TheGenomeWhisperer
 ## Version: 1.0.0
